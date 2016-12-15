@@ -6,9 +6,17 @@ RUN yum -y update && \
     yum -y install epel-release centos-release-openstack-mitaka
 
 RUN yum -y update && \
-    yum -y install bind-utils chrony git httpd \
-                   mod_ssl mod_wsgi openstack-dashboard \
-                   openstack-keystone wget
+    yum -y install \
+        bind-utils \
+        chrony \
+        git \
+        httpd \
+        mariadb \
+        mod_ssl \
+        mod_wsgi \
+        openstack-dashboard \
+        openstack-keystone \
+        wget
 
 RUN yum -y install https://github.com/pingidentity/mod_auth_openidc/releases/download/v2.1.0/cjose-0.4.1-1.el7.centos.x86_64.rpm
 RUN yum -y install https://github.com/pingidentity/mod_auth_openidc/releases/download/v2.1.2/mod_auth_openidc-2.1.2-1.el7.centos.x86_64.rpm
@@ -23,6 +31,8 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == system
   rm -f /lib/systemd/system/basic.target.wants/*;\
   rm -f /lib/systemd/system/anaconda.target.wants/*
 
+COPY entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 VOLUME [ "/sys/fs/cgroup" ]
 EXPOSE 80 5000 35357
 CMD ["/usr/sbin/init"]
