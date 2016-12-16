@@ -8,5 +8,7 @@ cat > "$tempSqlFile" <<-EOSQL
     FLUSH PRIVILEGES;
 EOSQL
 
+mysql -h ${MYSQL_HOST} --password=${MYSQL_PASSWORD} < ${tempSqlFile}
+
 su -s /bin/sh -c "keystone-manage db_sync" keystone
 keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
